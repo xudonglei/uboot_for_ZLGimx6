@@ -746,20 +746,22 @@ static iomux_v3_cfg_t const lcd_pads[] = {
 	MX6_PAD_LCD_DATA13__LCDIF_DATA13 | MUX_PAD_CTRL(LCD_PAD_CTRL),
 	MX6_PAD_LCD_DATA14__LCDIF_DATA14 | MUX_PAD_CTRL(LCD_PAD_CTRL),
 	MX6_PAD_LCD_DATA15__LCDIF_DATA15 | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_DATA16__LCDIF_DATA16 | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_DATA17__LCDIF_DATA17 | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_DATA18__LCDIF_DATA18 | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_DATA19__LCDIF_DATA19 | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_DATA20__LCDIF_DATA20 | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_DATA21__LCDIF_DATA21 | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_DATA22__LCDIF_DATA22 | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_DATA23__LCDIF_DATA23 | MUX_PAD_CTRL(LCD_PAD_CTRL),
+	//MX6_PAD_LCD_DATA16__LCDIF_DATA16 | MUX_PAD_CTRL(LCD_PAD_CTRL),
+	//MX6_PAD_LCD_DATA17__LCDIF_DATA17 | MUX_PAD_CTRL(LCD_PAD_CTRL),
+	//MX6_PAD_LCD_DATA18__LCDIF_DATA18 | MUX_PAD_CTRL(LCD_PAD_CTRL),
+	//MX6_PAD_LCD_DATA19__LCDIF_DATA19 | MUX_PAD_CTRL(LCD_PAD_CTRL),
+	//MX6_PAD_LCD_DATA20__LCDIF_DATA20 | MUX_PAD_CTRL(LCD_PAD_CTRL),
+	//MX6_PAD_LCD_DATA21__LCDIF_DATA21 | MUX_PAD_CTRL(LCD_PAD_CTRL),
+	//MX6_PAD_LCD_DATA22__LCDIF_DATA22 | MUX_PAD_CTRL(LCD_PAD_CTRL),
+	//MX6_PAD_LCD_DATA23__LCDIF_DATA23 | MUX_PAD_CTRL(LCD_PAD_CTRL),
 
 	/* LCD_RST */
-	MX6_PAD_SNVS_TAMPER9__GPIO5_IO09 | MUX_PAD_CTRL(NO_PAD_CTRL),
+	//MX6_PAD_SNVS_TAMPER9__GPIO5_IO09 | MUX_PAD_CTRL(NO_PAD_CTRL),
+	MX6_PAD_LCD_RESET__GPIO3_IO04	 | MUX_PAD_CTRL(NO_PAD_CTRL),//modify by xdl
 
 	/* Use GPIO for Brightness adjustment, duty cycle = period. */
-	MX6_PAD_GPIO1_IO08__GPIO1_IO08 | MUX_PAD_CTRL(NO_PAD_CTRL),
+	//MX6_PAD_GPIO1_IO08__GPIO1_IO08 | MUX_PAD_CTRL(NO_PAD_CTRL),
+	MX6_PAD_LCD_DATA18__GPIO3_IO23   | MUX_PAD_CTRL(NO_PAD_CTRL),//modify by xdl 不理解
 };
 
 void do_enable_parallel_lcd(struct display_info_t const *dev)
@@ -769,12 +771,14 @@ void do_enable_parallel_lcd(struct display_info_t const *dev)
 	imx_iomux_v3_setup_multiple_pads(lcd_pads, ARRAY_SIZE(lcd_pads));
 
 	/* Reset the LCD */
-	gpio_direction_output(IMX_GPIO_NR(5, 9) , 0);
+	//gpio_direction_output(IMX_GPIO_NR(5, 9) , 0);
+	gpio_direction_output(IMX_GPIO_NR(3, 4) , 0);//modify by xdl
 	udelay(500);
-	gpio_direction_output(IMX_GPIO_NR(5, 9) , 1);
+	//gpio_direction_output(IMX_GPIO_NR(5, 9) , 1);
+	gpio_direction_output(IMX_GPIO_NR(3, 4) , 1);//modify by xdl
 
 	/* Set Brightness to high */
-	gpio_direction_output(IMX_GPIO_NR(1, 8) , 1);
+	gpio_direction_output(IMX_GPIO_NR(3, 23) , 1);//modify by xdl
 }
 
 struct display_info_t const displays[] = {{
@@ -784,7 +788,7 @@ struct display_info_t const displays[] = {{
 	.detect = NULL,
 	.enable	= do_enable_parallel_lcd,
 	.mode	= {
-		.name			= "TFT43AB",
+		.name			= "TFT-4.3A",
 		.xres           = 480,
 		.yres           = 272,
 		.pixclock       = 108695,
